@@ -17,7 +17,7 @@
 ### Plugin description
 
 * Detect bacteria on the average intensity Z-projection of channel 3 with Omnipose
-* for each bacteria give intensity in channel 2 
+* for each bacteria give intensity in channel 2  and in channel 3 and the ratio
 
 
 ### Dependencies
