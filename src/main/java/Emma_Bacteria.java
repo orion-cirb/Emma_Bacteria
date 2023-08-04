@@ -63,7 +63,8 @@ public class Emma_Bacteria implements PlugIn {
                 outDir.mkdir();
             }
             // Write header in results file
-            String header = "Image name\t# bacterium\tBacterium surface (µm2)\tBacterium length (µm)\tGene intensity\n";
+            String header = "Image name\t# bacterium\tBacterium surface (µm2)\tBacterium length (µm)\tGene intensity\tbacterium intensity"
+                    + "\tGene intensity / Bacterium intensity\n";
             FileWriter fwResults = new FileWriter(outDirResults + "results.xls", false);
             results = new BufferedWriter(fwResults);
             results.write(header);
@@ -125,10 +126,10 @@ public class Emma_Bacteria implements PlugIn {
 
                 // Save results
                 tools.print("- Saving results -");
-//                tools.saveResults(bactPop, imgGene, rootName, results);
+                tools.saveResults(bactPop, imgBact, imgGene, rootName, results);
 
                 // Save images
-                tools.drawResults(imgBact, bactPop, outDirResults+rootName, outDirResults);
+                tools.drawResults(imgBact, imgGene, bactPop, outDirResults+rootName, outDirResults);
                 tools.flush_close(imgBact);
                 tools.flush_close(imgGene);
             }

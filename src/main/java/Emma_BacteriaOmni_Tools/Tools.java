@@ -23,12 +23,10 @@ import loci.common.services.ServiceException;
 import loci.formats.FormatException;
 import loci.formats.meta.IMetadata;
 import loci.plugins.util.ImageProcessorReader;
-import mcib3d.geom.Voxel3D;
 import mcib3d.geom2.Object3DInt;
 import mcib3d.geom2.Objects3DIntPopulation;
 import mcib3d.geom2.Objects3DIntPopulationComputation;
 import mcib3d.geom2.VoxelInt;
-import mcib3d.geom2.measurements.MeasureCentroid;
 import mcib3d.geom2.measurements.MeasureFeret;
 import mcib3d.geom2.measurements.MeasureIntensity;
 import mcib3d.geom2.measurements.MeasureVolume;
@@ -336,15 +334,16 @@ public class Tools {
      * Compute bacteria parameters and save them in file
      * @throws java.io.IOException
      */
-    public void saveResults(Objects3DIntPopulation bactPop, ImagePlus geneImg, String imgName, BufferedWriter file) throws IOException {
+    public void saveResults(Objects3DIntPopulation bactPop, ImagePlus bactImg, ImagePlus geneImg, String imgName, BufferedWriter file) throws IOException {
         for (Object3DInt bact : bactPop.getObjects3DInt()) {
             float bactLabel = bact.getLabel();
             double bactSurf = new MeasureVolume(bact).getValueMeasurement(MeasureVolume.VOLUME_UNIT);
             VoxelInt feret1Unit = new MeasureFeret(bact).getFeret1Unit();
             VoxelInt feret2Unit = new MeasureFeret(bact).getFeret2Unit();
             double bactLength = feret1Unit.distance(feret2Unit)*cal.pixelWidth;
+            double bactInt = new MeasureIntensity(bact, ImageHandler.wrap(bactImg)).getValueMeasurement(MeasureIntensity.INTENSITY_SUM);
             double geneInt = new MeasureIntensity(bact, ImageHandler.wrap(geneImg)).getValueMeasurement(MeasureIntensity.INTENSITY_SUM);
-            file.write(imgName+"\t"+bactLabel+"\t"+bactSurf+"\t"+bactLength+"\t"+geneInt+"\n");
+            file.write(imgName+"\t"+bactLabel+"\t"+bactSurf+"\t"+bactLength+"\t"+geneInt+"\t"+bactInt+"\t"+geneInt/bactInt+"\n");
             file.flush();
         }
     }
@@ -353,16 +352,15 @@ public class Tools {
     /**
      * Save results in images
      */
-    public void drawResults(ImagePlus img1, Objects3DIntPopulation bactPop, String imgName, String outDir) {
-        ImageHandler imgBact = ImageHandler.wrap(img1).createSameDimensions();
-        bactPop.drawInImage(imgBact);
-        IJ.run(imgBact.getImagePlus(), "glasbey on dark", "");
-        ImagePlus[] imgColors1 = {imgBact.getImagePlus(), null, null, img1};
+    public void drawResults(ImagePlus imgBact, ImagePlus imgGene, Objects3DIntPopulation bactPop, String imgName, String outDir) {
+        ImageHandler imhBact = ImageHandler.wrap(imgBact).createSameDimensions();
+        bactPop.drawInImage(imhBact);
+        IJ.run(imhBact.getImagePlus(), "glasbey on dark", "");
+        ImagePlus[] imgColors1 = {imhBact.getImagePlus(), null, null, imgBact, imgGene};
         ImagePlus imgOut1 = new RGBStackMerge().mergeHyperstacks(imgColors1, false);
         imgOut1.setCalibration(cal);
         FileSaver ImgObjectsFile1 = new FileSaver(imgOut1);
         ImgObjectsFile1.saveAsTiff(imgName+"_bacteria.tif");      
-        flush_close(imgBact.getImagePlus());
         flush_close(imgOut1);
     }
     
