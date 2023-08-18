@@ -2,7 +2,7 @@
 
 * **Developed for:** Emma
 * **Team:** Espeli
-* **Date:** July 2023
+* **Date:** August 2023
 * **Software:** Fiji
 
 
@@ -27,5 +27,5 @@
 
 ### Version history
 
-Version 1 released on July 28, 2023.
+Version 1 released on August 4, 2023.
 
