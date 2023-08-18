@@ -23,7 +23,6 @@
 ### Dependencies
 
 * **3DImageSuite** Fiji plugin
-* **CLIJ** Fiji plugin
 * **Omnipose** conda environment + *bact_fluor_omnitorch_0* model
 
 ### Version history
