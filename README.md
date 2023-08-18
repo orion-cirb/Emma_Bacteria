@@ -18,7 +18,7 @@
 
 * Perform average intensity Z-projection of both channels
 * Detect bacteria on channel 2 with Omnipose
-* Measure intensity of each bacterium in channels 2 and 3, and give their ratio
+* Measure integrated intensity of each bacterium in channels 2 and 3, and give their ratio
 
 ### Dependencies
 
